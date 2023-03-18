@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const reactionSchema = require('./Reaction');
 
 const thoughtSchema = new Schema(
     {
@@ -14,17 +15,18 @@ const thoughtSchema = new Schema(
             required: true,
             match: [regex, 'must be in email format']
         },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
         thoughts: [
             {
                 type: Schema.Types.ObjectId,
                 ref: 'Thought',
             },
         ],
-        friends: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
+        reaction: [
+            reactionSchema
         ],
     },
     {
@@ -35,10 +37,10 @@ const thoughtSchema = new Schema(
     }
 );
 
-userSchema.virtual('friendCount').get(function () {
-    return this.friends.length;
+thoughtSchema.virtual('reactionCount').get(function () {
+    return this.reaction.length;
 });
 
-const User = model('User', userSchema)
+const Thought = model('Thought', thoughtSchema)
 
-module.exports = User;
+module.exports = Thought;
