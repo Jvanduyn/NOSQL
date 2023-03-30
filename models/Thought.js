@@ -9,23 +9,11 @@ const thoughtSchema = new Schema(
             required: true,
             trimmed: true,
         },
-        email: {
-            type: String,
-            unique: true,
-            required: true,
-            match: [regex, 'must be in email format']
-        },
         createdAt: {
             type: Date,
             default: Date.now,
         },
-        thoughts: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Thought',
-            },
-        ],
-        reaction: [
+        reactions: [
             reactionSchema
         ],
     },
@@ -38,7 +26,7 @@ const thoughtSchema = new Schema(
 );
 
 thoughtSchema.virtual('reactionCount').get(function () {
-    return this.reaction.length;
+    return this.reactions.length;
 });
 
 const Thought = model('Thought', thoughtSchema)
